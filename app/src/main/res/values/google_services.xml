@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="google_app_id" translatable="false">1:962529637083:android:cb12ace398d1d5786b12fe</string>
+
+    <string name="gcm_defaultSenderId" translatable="false">962529637083</string>
+    <string name="default_web_client_id" translatable="false">962529637083-hh2g6g88988v4f31vtc2qt8j5protus4.apps.googleusercontent.com</string>
+    <string name="firebase_database_url" translatable="false">https://pi-doorman-3df25.firebaseio.com</string>
+    <string name="project_id" translatable="false">pi-doorman-3df25</string>
+</resources>
