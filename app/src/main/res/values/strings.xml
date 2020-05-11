@@ -5,9 +5,12 @@
     <string name="ring_channel_name" translatable="false">Ring Channel</string>
     <string name="ring_channel_description" translatable="false">Channel for Ring notifications</string>
 
+    <string name="foreground_channel_id" translatable="false">foreground_channel_id</string>
+    <string name="foreground_channel_name" translatable="false">Foreground Channel</string>
+    <string name="foreground_channel_description" translatable="false">Ensure Ring notifications</string>
+
     <string name="ring">Ring</string>
 
     <string name="notification_title">@string/ring</string>
     <string name="notification_text">Server time: %1$s, difference: %2$s</string>
-
 </resources>

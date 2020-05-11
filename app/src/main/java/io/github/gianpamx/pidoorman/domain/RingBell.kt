@@ -2,8 +2,12 @@ package io.github.gianpamx.pidoorman.domain
 
 import io.reactivex.Single
 import org.threeten.bp.Instant
+import org.threeten.bp.ZoneId
 import org.threeten.bp.ZonedDateTime
 import org.threeten.bp.format.DateTimeFormatter
+
+
+private val utc = ZoneId.of("Z")
 
 class RingBell(
     private val timeGateway: TimeGateway,
@@ -14,16 +18,16 @@ class RingBell(
 
     operator fun invoke(serverTime: Long) =
         Single.fromCallable {
-            val difference = (timeGateway.utcInMillis() - serverTime).toString()
-            val time = formatDateTime(serverTime)
+            val difference = formatDateTime(timeGateway.utcInMillis() - serverTime, utc)
+            val time = formatDateTime(serverTime, timeGateway.systemZoneId())
             return@fromCallable NotificationData(time, difference)
         }.flatMapCompletable {
             notificationGateway.ringNotification(it.time, it.difference)
         }
 
-    private fun formatDateTime(serverTime: Long): String {
+    private fun formatDateTime(serverTime: Long, zoneId: ZoneId): String {
         val instant: Instant = Instant.ofEpochMilli(serverTime)
-        val zonedDateTime = ZonedDateTime.ofInstant(instant, timeGateway.systemZoneId())
+        val zonedDateTime = ZonedDateTime.ofInstant(instant, zoneId)
         return formatter.format(zonedDateTime)
     }
 }

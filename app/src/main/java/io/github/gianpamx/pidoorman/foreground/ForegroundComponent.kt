@@ -1,4 +1,4 @@
-package io.github.gianpamx.pidoorman.receiver
+package io.github.gianpamx.pidoorman.foreground
 
 import dagger.BindsInstance
 import dagger.Component
@@ -7,14 +7,14 @@ import io.github.gianpamx.pidoorman.app.AppComponent
 
 @ServiceScope
 @Component(dependencies = [AppComponent::class])
-interface ReceiverComponent {
-    fun inject(service: ReceiverService)
+interface ForegroundComponent {
+    fun inject(service: ForegroundService)
 
     @Component.Builder
     interface Builder {
         @BindsInstance
-        fun service(receiverService: ReceiverService): Builder
+        fun service(foregroundService: ForegroundService): Builder
         fun appComponent(appComponent: AppComponent?): Builder
-        fun build(): ReceiverComponent
+        fun build(): ForegroundComponent
     }
 }

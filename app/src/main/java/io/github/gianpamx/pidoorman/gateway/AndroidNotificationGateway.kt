@@ -1,5 +1,6 @@
 package io.github.gianpamx.pidoorman.gateway
 
+import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
@@ -9,6 +10,7 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationCompat.DEFAULT_ALL
+import androidx.core.app.NotificationCompat.PRIORITY_LOW
 import androidx.core.app.NotificationCompat.PRIORITY_MAX
 import androidx.core.app.NotificationManagerCompat
 import io.github.gianpamx.pidoorman.MainActivity
@@ -34,12 +36,36 @@ class AndroidNotificationGateway(private val context: Context) : NotificationGat
                 .setContentText(getString(R.string.notification_text, time, difference))
                 .setContentIntent(pendingIntent)
                 .setPriority(PRIORITY_MAX)
+                .setCategory(Notification.CATEGORY_CALL)
                 .setDefaults(DEFAULT_ALL)
                 .setVibrate(longArrayOf(100, 250, 100, 250, 100, 250))
                 .setAutoCancel(true)
                 .build()
 
             NotificationManagerCompat.from(context).notify(NOTIFICATION_ID, notification)
+        }
+    }
+
+    override fun foregroundNotification(): Notification {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) createForegroundChannel()
+
+        return with(context) {
+            val intent = Intent(this, MainActivity::class.java).apply {
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            }
+            val pendingIntent = PendingIntent.getActivity(this, 0, intent, 0)
+
+            NotificationCompat.Builder(this, getString(R.string.foreground_channel_id))
+                .setSmallIcon(R.drawable.ic_notifications_active_black_24dp)
+                .setContentTitle(getString(R.string.foreground_channel_description))
+                .setNotificationSilent()
+                .setOngoing(true)
+                .setLocalOnly(true)
+                .setCategory(Notification.CATEGORY_SERVICE)
+                .setContentIntent(pendingIntent)
+                .setPriority(PRIORITY_LOW)
+                .setAutoCancel(false)
+                .build()
         }
     }
 
@@ -52,6 +78,18 @@ class AndroidNotificationGateway(private val context: Context) : NotificationGat
                 NotificationManager.IMPORTANCE_HIGH
             ).apply {
                 description = getString(R.string.ring_channel_description)
+            })
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun createForegroundChannel() = with(context) {
+        (getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager)
+            .createNotificationChannel(NotificationChannel(
+                getString(R.string.foreground_channel_id),
+                getString(R.string.foreground_channel_name),
+                NotificationManager.IMPORTANCE_LOW
+            ).apply {
+                description = getString(R.string.foreground_channel_description)
             })
     }
 }

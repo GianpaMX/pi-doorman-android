@@ -3,6 +3,7 @@ package io.github.gianpamx.pidoorman.app
 import android.app.Application
 import dagger.BindsInstance
 import dagger.Component
+import io.github.gianpamx.pidoorman.domain.NotificationGateway
 import io.github.gianpamx.pidoorman.domain.RingBell
 import javax.inject.Singleton
 
@@ -13,6 +14,8 @@ interface AppComponent {
     val application: Application
 
     val ringBell: RingBell
+
+    val notificationGateway: NotificationGateway
 
     @Component.Builder
     interface Builder {
